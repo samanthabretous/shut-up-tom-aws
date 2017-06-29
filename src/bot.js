@@ -1,0 +1,12 @@
+const Bot = function(web) {
+	this.web = web;
+};
+
+Bot.prototype.process = function(event) {
+  console.log("Bot file this.web", this.web);
+  console.log("Bot File: event", event);
+  this.web.reactions.add(":smile:", {channel: event.channel, timestamp: event.event_ts})
+    .catch(error => console.log(`Error adding Slack reaction: ${error}`));
+};
+
+module.exports = Bot;
