@@ -2,18 +2,24 @@ service: shutuptom
 
 frameworkVersion: ">=1.2.0 <2.0.0"
 
+plugins:
+  - serverless-webpack
+
+custom:
+  webpackIncludeModules: true
+
 package:
   exclude:
-    - "**"
     - node_modules/aws-sdk/**
   include:
     - node_modules/**
     - src/**
+    - handlers/**
 
 provider:
   name: aws
   region: us-east-1
-  stage: dev
+  stage: prod
   runtime: nodejs6.10
   environment:
     CLIENT_ID: ${file(./local.yml):${opt:stage, self:provider.stage}.slack.clientId}
@@ -28,17 +34,21 @@ provider:
 
 functions:
   install:
-    handler: src/slackhandler.install
+    handler: slackhandler.install
     events:
       - http: GET install
   authorized:
-    handler: src/slackhandler.authorized
+    handler: slackhandler.authorized
     events:
       - http: GET authorized
   event:
-    handler: src/slackhandler.event
+    handler: slackhandler.event
     events:
       - http: POST event
+  test:
+    handler: reacthandler.test
+    events:
+      - http: GET test
 
 resources:
   Resources:

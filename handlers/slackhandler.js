@@ -1,27 +1,31 @@
-const https = require('https');
-const OAuth = require('./oauth.js');
-const Templates = require('./templates.js');
-const WebClient = require('@slack/client').WebClient;
-const Bot = require('./bot.js');
+import https from 'https';
+import React from 'react';
+import { StaticRouter as Router } from 'react-router-dom';
+import sourceMapSupport from 'source-map-support';
+import { WebClient } from '@slack/client';
+import OAuth from '../src/oauth.js';
+import { installTemplate, authorizedTemplate } from '../src/templates.js';
+import Bot from '../src/bot.js';
 
 const client = {
 	id: process.env.CLIENT_ID,
 	secret: process.env.CLIENT_SECRET
 };
-
-module.exports.install = (event, context, callback) => {
+sourceMapSupport.install();
+export const install = (event, context, callback) => {
+	console.log(installTemplate);
 	callback(null, {
 		statusCode: 200,
 		headers: {
 			'Content-Type': 'text/html'
 		},
-		body: Templates.install(client.id)
+		body: installTemplate(client.id)
 	});
 };
 
-module.exports.authorized = (event, context, callback) => {
+export const authorized = (event, context, callback) => {
 	const code = event.queryStringParameters.code;
-	
+
 	https.get(`https://slack.com/api/oauth.access?client_id=${client.id}&client_secret=${client.secret}&code=${code}`, response => {
 		var body = '';
 		console.log("authorized==========",response)
@@ -32,17 +36,17 @@ module.exports.authorized = (event, context, callback) => {
 				.catch(error => console.log(error));
 		});
 	});
-	
+
 	callback(null, {
 		statusCode: 200,
 		headers: {
 			'Content-Type': 'text/html'
 		},
-		body: Templates.authorized()
+		body: authorizedTemplate()
 	});
 };
 
-module.exports.event = (event, context, callback) => {
+export const event = (event, context, callback) => {
 	const jsonBody = JSON.parse(event.body);
 	const response = {
 		statusCode: 200
@@ -56,7 +60,7 @@ module.exports.event = (event, context, callback) => {
 			response.body = jsonBody.challenge;
 			console.log("+++++++++++++", response)
 			break;
-		
+
 		case 'event_callback':
 			console.log("============ event_callback", jsonBody.team_id)
 			OAuth.retrieveAccessToken(jsonBody.team_id)
@@ -70,7 +74,7 @@ module.exports.event = (event, context, callback) => {
 
 const handleEvent = (event, token) => {
 	const bot = new Bot(new WebClient(token));
-	
+
 	switch (event.type) {
 		case 'message':
 			// ignore ourselves
