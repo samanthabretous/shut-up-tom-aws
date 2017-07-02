@@ -1,41 +1,33 @@
 import https from 'https';
 import React from 'react';
-import { renderToString, renderToStaticMarkup } from 'react-dom/server';
+import { renderToString } from 'react-dom/server';
 import { StaticRouter as Router, matchPath } from 'react-router-dom';
 import sourceMapSupport from 'source-map-support';
 import { WebClient } from '@slack/client';
 import { storeAccessToken, retrieveAccessToken } from '../src/oauth.js';
-import { installTemplate, renderTemplate } from '../src/templates.js';
+import { makeStaticMarkup } from '../src/utils.js';
+import { renderTemplate } from '../src/templates.js';
 import Bot from '../src/bot.js';
-import App from '../shared/App';
-import Layout from '../shared/Layout';
-
+import { App } from '../shared';
 const client = {
 	id: process.env.CLIENT_ID,
 	secret: process.env.CLIENT_SECRET
 };
 sourceMapSupport.install();
-const bundleLocation = 'https://s3.amazonaws.com/dev.shut-up-tom.com/bundle.js';
-const styleLocation = 'https://s3.amazonaws.com/dev.shut-up-tom.com/css/style.min.css';
-
-const makeStaticMarkup = (content) => (
-	renderToStaticMarkup(
-		<Layout content={content} bundleLocation={bundleLocation} styleLocation={styleLocation} />
-);
 
 export const install = (event, context, callback) => {
 	const mountMeImFamous = renderToString((
-		<Router context={{}}>
-			<App clientId={client.id} location="/"/>
+		<Router context={{}} location="/">
+			<App clientId={client.id} />
 		</Router>
 	));
-
+	console.log("event", event);
 	callback(null, {
 		statusCode: 200,
 		headers: {
 			'Content-Type': 'text/html'
 		},
-		body: makeStaticMarkup(renderTemplate(mountMeImFamous))
+		body: renderTemplate(mountMeImFamous)
 	});
 };
 
@@ -56,16 +48,17 @@ console.log("context", context);
 			console.log("jsonBody",jsonBody);
 
 			var mountMeImFamous = renderToString((
-				<Router context={{}} location={`/${jsonBody.team_id}/dashboard`}>
-					<App  />
+				<Router context={{}} location={`/prod/install/${jsonBody.team_id}/info`}>
+					<App team={jsonBody}/>
 				</Router>
 			));
 			callback(null, {
 				statusCode: 200,
 				headers: {
-					'Content-Type': 'text/html'
+					'Content-Type': 'text/html',
+					'Set-Cookie': `team_id=${jsonBody.team_id}`
 				},
-				body: makeStaticMarkup(renderTemplate(mountMeImFamous))
+				body: renderTemplate(mountMeImFamous)
 			});
 		});
 	});

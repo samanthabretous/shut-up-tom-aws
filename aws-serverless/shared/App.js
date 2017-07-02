@@ -1,14 +1,16 @@
 import React from 'react';
-import { Route } from 'react-router-dom';
+import { Switch, Route } from 'react-router-dom';
 import { Main, Landing, Logo } from "./components";
 
-export default ({ team, clientId }) => {
-  console.log(team);
-  console.log(clientId);
+export default (props) => {
   return (
     <Logo>
-      <Route path="/" render={() => <Landing clientId={clientId} />} />
-      <Route path="/:teamId" component={Main} />
+      <Switch>
+        <Route path="/prod/:install/:teamId" render={(props) => (
+            <Main relPath={props.match.path} relURL={props.match.url} />
+        )} />
+        <Route path="/prod/:install" render={(prop) => <Landing clientId={props.clientId} />} />
+      </Switch>
     </Logo>
   );
 }

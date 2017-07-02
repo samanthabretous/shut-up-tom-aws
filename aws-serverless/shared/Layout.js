@@ -10,9 +10,7 @@ const Layout = ({ content, bundleLocation, styleLocation }) => (
       <script src={bundleLocation} defer></script>
     </head>
     <body>
-        <div id="reactContainer" />
-        <div id="reactHelloContainer"
-            dangerouslySetInnerHTML={ {__html: content} } />
+      <div id="root" dangerouslySetInnerHTML={ {__html: content} } />
     </body>
   </html>
 );

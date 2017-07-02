@@ -1,7 +1,10 @@
 import React from 'react';
 import { StaticRouter as Router } from 'react-router-dom';
 
-export const renderTemplate = (mountMeImFamous, bundleLocation, styleLocation) => `<!DOCTYPE html>
+const bundleLocation = 'https://s3.amazonaws.com/dev.shut-up-tom.com/bundle.js';
+const styleLocation = 'https://s3.amazonaws.com/dev.shut-up-tom.com/css/style.min.css';
+
+export const renderTemplate = (mountMeImFamous) => `<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8">

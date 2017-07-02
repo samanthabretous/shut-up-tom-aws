@@ -1,13 +1,12 @@
-.index {
+.landing_page {
+  width: 100%;
+  height: 100vh;
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding-bottom: 25%;
 }
 
-.button__slack {
-  margin-top: 10%;
+.landing_page-slackButton {
 }
 
 .index .logo__container-index {

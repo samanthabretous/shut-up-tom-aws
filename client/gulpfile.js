@@ -4,14 +4,14 @@ const minifyCSS = require('gulp-minify-css');
 
 // create task
 gulp.task('css', () => {
-  gulp.src('/app/css/*.css')
+  gulp.src('./app/css/*.css')
     .pipe(minifyCSS())
     .pipe(concat('style.min.css'))
-    .pipe(gulp.dest('/app/build/css'))
+    .pipe(gulp.dest('./app/build/css'))
 });
 
 gulp.task('watch', () => {
-  gulp.watch('/app/css/*.css', ['css']);
+  gulp.watch('./app/css/*.css', ['css']);
 });
 
 gulp.task('copy', () => {
