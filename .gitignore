@@ -3,3 +3,5 @@ local.yml
 .env
 node_modules
 .serverless
+bundle.js
+bundle.js.map

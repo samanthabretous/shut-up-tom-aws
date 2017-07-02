@@ -1,6 +1,6 @@
 import https from 'https';
 import React from 'react';
-import { renderToString } from 'react-dom/server';
+import { renderToString, renderToStaticMarkup } from 'react-dom/server';
 import { StaticRouter as Router, matchPath } from 'react-router-dom';
 import sourceMapSupport from 'source-map-support';
 import { WebClient } from '@slack/client';
@@ -8,6 +8,7 @@ import { storeAccessToken, retrieveAccessToken } from '../src/oauth.js';
 import { installTemplate, renderTemplate } from '../src/templates.js';
 import Bot from '../src/bot.js';
 import App from '../shared/App';
+import Layout from '../shared/Layout';
 
 const client = {
 	id: process.env.CLIENT_ID,
@@ -17,18 +18,24 @@ sourceMapSupport.install();
 const bundleLocation = 'https://s3.amazonaws.com/dev.shut-up-tom.com/bundle.js';
 const styleLocation = 'https://s3.amazonaws.com/dev.shut-up-tom.com/css/style.min.css';
 
+const makeStaticMarkup = (content) => (
+	renderToStaticMarkup(
+		<Layout content={content} bundleLocation={bundleLocation} styleLocation={styleLocation} />
+);
+
 export const install = (event, context, callback) => {
 	const mountMeImFamous = renderToString((
 		<Router context={{}}>
 			<App clientId={client.id} location="/"/>
 		</Router>
 	));
+
 	callback(null, {
 		statusCode: 200,
 		headers: {
 			'Content-Type': 'text/html'
 		},
-		body: renderTemplate(mountMeImFamous, bundleLocation, styleLocation)
+		body: makeStaticMarkup(renderTemplate(mountMeImFamous))
 	});
 };
 
@@ -58,7 +65,7 @@ console.log("context", context);
 				headers: {
 					'Content-Type': 'text/html'
 				},
-				body: renderTemplate(mountMeImFamous)
+				body: makeStaticMarkup(renderTemplate(mountMeImFamous))
 			});
 		});
 	});

@@ -7,7 +7,7 @@ export default ({ team, clientId }) => {
   console.log(clientId);
   return (
     <Logo>
-      <Route exact path="/" render={() => <Landing clientId={clientId} />} />
+      <Route path="/" render={() => <Landing clientId={clientId} />} />
       <Route path="/:teamId" component={Main} />
     </Logo>
   );
