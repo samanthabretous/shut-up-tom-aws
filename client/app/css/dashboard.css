@@ -1,0 +1,107 @@
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 0 3%;
+}
+
+.reading {
+  height: 40%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  padding-bottom: 2%;
+}
+
+.reading h3 {
+  color: white;
+  font-size: 5rem;
+}
+
+/*-----------------
+  MONSTERS
+-------------------*/
+.characters {
+  display: flex;
+  align-items: flex-end;
+  height: 60%;
+  width: 100%;
+}
+
+.character {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  position: relative;
+}
+
+.character__button {
+  width: 100%;
+  height: 50%;
+  opacity: .4;
+}
+.character__button:hover {
+  opacity: 1;
+  animation: showButton 500ms ease-in 0s;
+}
+.character__bubble {
+  opacity: 0;
+}
+.character__bubble-animation {
+  opacity: 1;
+  animation: showButton 500ms ease-in 0s;
+}
+@keyframes showButton {
+  from {
+    opacity: .4;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.character__monster {
+  height: 100%;
+  width: auto;
+}
+
+/*left*/
+.character__cloud {
+  height: 40%;
+  position: absolute;
+  bottom: 45%;
+}
+.character__stress {
+  position: absolute;
+  bottom: 3%;
+}
+
+/*middle*/
+.character__speak {
+  height: 40%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.character__tall {
+  position: absolute;
+  bottom: 8%;
+  height: 65%;
+}
+
+/*right*/
+.character__music {
+  position: absolute;
+  height: 40%;
+  bottom: 48%;
+  left: 30%;
+}
+.character__horn {
+  position: absolute;
+  bottom: 5%;
+}
+
+.character__active {
+  opacity: 1;
+}
