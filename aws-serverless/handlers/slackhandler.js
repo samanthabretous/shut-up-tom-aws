@@ -4,7 +4,7 @@ import { renderToString } from 'react-dom/server';
 import { StaticRouter as Router, matchPath } from 'react-router-dom';
 import sourceMapSupport from 'source-map-support';
 import { WebClient } from '@slack/client';
-import { storeAccessToken, retrieveAccessToken } from '../src/oauth.js';
+import { storeTeam, retrieveTeam } from '../src/oauth.js';
 import { makeStaticMarkup } from '../src/utils.js';
 import { renderTemplate } from '../src/templates.js';
 import Bot from '../src/bot.js';
@@ -14,51 +14,49 @@ const client = {
 	secret: process.env.CLIENT_SECRET
 };
 sourceMapSupport.install();
-
-export const install = (event, context, callback) => {
+const createReact = (location, context) => {
 	const mountMeImFamous = renderToString((
-		<Router context={{}} location="/">
+		<Router context={context} location={location}>
 			<App clientId={client.id} />
 		</Router>
 	));
-	console.log("event", event);
+	return renderTemplate(mountMeImFamous)
+}
+export const install = (event, context, callback) => {
 	callback(null, {
 		statusCode: 200,
 		headers: {
 			'Content-Type': 'text/html'
 		},
-		body: renderTemplate(mountMeImFamous)
+		body: createReact('/prod/install', {}),
 	});
 };
 
 export const authorized = (event, context, callback) => {
 	const code = event.queryStringParameters.code;
-console.log("context", context);
+console.log("event", event);
 	https.get(`https://slack.com/api/oauth.access?client_id=${client.id}&client_secret=${client.secret}&code=${code}`, response => {
 		var body = '';
+		console.log('response', response)
 		response.on('data', chunk => body += chunk);
 		response.on('end', () => {
 			const jsonBody = JSON.parse(body);
-			storeAccessToken(jsonBody.team_id, jsonBody.bot.bot_access_token)
+			storeTeam(jsonBody)
 				.catch(error => console.log(error));
 
 			// remove sensitive data before sending to client
 			delete jsonBody.access_token;
 			delete jsonBody.bot;
-			console.log("jsonBody",jsonBody);
 
-			var mountMeImFamous = renderToString((
-				<Router context={{}} location={`/prod/install/${jsonBody.team_id}/info`}>
-					<App team={jsonBody}/>
-				</Router>
-			));
+			const reactLocation = `/prod/install/${jsonBody.team_id}/info`;
 			callback(null, {
 				statusCode: 200,
 				headers: {
 					'Content-Type': 'text/html',
+					// 'Location': `${reactLocation}`,
 					'Set-Cookie': `team_id=${jsonBody.team_id}`
 				},
-				body: renderTemplate(mountMeImFamous)
+				body: createReact(reactLocation, {}),
 			});
 		});
 	});
@@ -82,7 +80,7 @@ export const event = (event, context, callback) => {
 
 		case 'event_callback':
 			console.log("============ event_callback", jsonBody.team_id)
-			retrieveAccessToken(jsonBody.team_id)
+			retrieveTeam(jsonBody.team_id)
 				.then(botAccessToken => handleEvent(jsonBody.event, botAccessToken))
 				.catch(error => console.log(error));
 			break;

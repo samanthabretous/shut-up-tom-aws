@@ -1,11 +1,11 @@
 import AWS from 'aws-sdk';
 
 const database = new AWS.DynamoDB.DocumentClient();
-const accessTokenTableName = process.env.ACCESS_TOKEN_TABLE_NAME;
+const teamTableName = process.env.TEAM_TABLE_NAME;
 
-export const retrieveAccessToken = (teamId) => {
+export const retrieveTeam = (teamId) => {
 	const params = {
-		TableName: accessTokenTableName,
+		TableName: teamTableName,
 		Key: {
 			teamId: teamId
 		}
@@ -18,12 +18,14 @@ export const retrieveAccessToken = (teamId) => {
 	});
 };
 
-export const storeAccessToken = (teamId, botAccessToken) => {
+export const storeTeam = (team) => {
 	const params = {
-		TableName: accessTokenTableName,
+		TableName: teamTableName,
 		Item: {
-			teamId: teamId,
-			botAccessToken: botAccessToken
+			teamId: team.team_id,
+			botAccessToken: team.bot.bot_access_token,
+			teamName: team.team_name,
+			webhook: team.incoming_webhook,
 		}
 	};
 

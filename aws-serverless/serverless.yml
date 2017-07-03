@@ -24,7 +24,7 @@ provider:
   environment:
     CLIENT_ID: ${file(./local.yml):${opt:stage, self:provider.stage}.slack.clientId}
     CLIENT_SECRET: ${file(./local.yml):${opt:stage, self:provider.stage}.slack.clientSecret}
-    ACCESS_TOKEN_TABLE_NAME: ${self:resources.Resources.accessTokenTable.Properties.TableName}
+    TEAM_TABLE_NAME: ${self:resources.Resources.teamTable.Properties.TableName}
   iamRoleStatements:
     - Effect: Allow
       Action:
@@ -52,10 +52,10 @@ functions:
 
 resources:
   Resources:
-    accessTokenTable:
+    teamTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: ${self:service}-${opt:stage, self:provider.stage}-accessTokenTable
+        TableName: ${self:service}app-${opt:stage, self:provider.stage}-teamTable
         AttributeDefinitions:
           - AttributeName: teamId
             AttributeType: S

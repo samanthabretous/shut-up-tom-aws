@@ -1,6 +1,6 @@
 # Shut Up Tom
 
-### Have you ever want to yell out in rage because the office environment is too loud. Well now you don't have to. Shut Up Tom will do the dirty work for you by slacking out to everyone to 'hey shut up' when the noise levels are too loud.
+### Have you ever want to yell out in rage because your office environment is too loud for no reason. Well now you don't have to. Shut Up Tom will do the dirty work for you. A friendly 'hey shut up' Slack message will be sent to all your coworkers when the noise levels are unbearable. With the option to go into party mode, library mode or modes in between, Shut Up Tom will put your mind to ease.
 
 ## Getting started
 

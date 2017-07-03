@@ -4,6 +4,7 @@ import Info from './Info.jsx';
 import Main from './Main.jsx';
 import Landing from './Landing.jsx';
 import Logo from './Logo.jsx';
+import RedirectWithStatus from './RedirectWithStatus.jsx';
 
 export {
   CustomMessages,
@@ -12,4 +13,5 @@ export {
   Main,
   Landing,
   Logo,
+  RedirectWithStatus,
 };
