@@ -13,7 +13,7 @@ module.exports = {
   // Since 'aws-sdk' is not compatible with webpack,
   // we exclude all node dependencies
   externals: [nodeExternals()],
-  // Run babel on all .js files and skip those in node_modules
+  // Run babel on all .js and .jsx files and skip those in node_modules
   module: {
     loaders: [{
       test: [/\.jsx?$/, /\.js?$/],

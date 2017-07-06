@@ -33,10 +33,10 @@ provider:
       Resource: arn:aws:dynamodb:${self:provider.region}:*:*
 
 functions:
-  install:
-    handler: slackhandler.install
+  landing:
+    handler: slackhandler.landing
     events:
-      - http: GET install
+      - http: GET landing
   authorized:
     handler: slackhandler.authorized
     events:

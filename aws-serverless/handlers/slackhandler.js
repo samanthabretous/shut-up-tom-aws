@@ -5,39 +5,44 @@ import { StaticRouter as Router, matchPath } from 'react-router-dom';
 import sourceMapSupport from 'source-map-support';
 import { WebClient } from '@slack/client';
 import { storeTeam, retrieveTeam } from '../src/oauth.js';
-import { makeStaticMarkup } from '../src/utils.js';
 import { renderTemplate } from '../src/templates.js';
 import Bot from '../src/bot.js';
-import { App } from '../shared';
+import App from '../../client/app/shared/App';
+
+// slack authorization tokens
 const client = {
 	id: process.env.CLIENT_ID,
 	secret: process.env.CLIENT_SECRET
 };
 sourceMapSupport.install();
-const createReact = (location, context) => {
+
+const bundleLocation = 'https://s3.amazonaws.com/dev.shut-up-tom.com/bundle.js';
+const styleLocation = 'https://s3.amazonaws.com/dev.shut-up-tom.com/css/style.min.css';
+
+//server side react rendering
+export const createReact = (location, context, bundle, style, team, authorized) => {
 	const mountMeImFamous = renderToString((
 		<Router context={context} location={location}>
-			<App clientId={client.id} />
+			<App clientId={client.id} team={team} authorized={authorized}/>
 		</Router>
 	));
-	return renderTemplate(mountMeImFamous)
+	return renderTemplate(mountMeImFamous, bundle, style)
 }
-export const install = (event, context, callback) => {
+
+export const landing = (event, context, callback) => {
 	callback(null, {
 		statusCode: 200,
 		headers: {
 			'Content-Type': 'text/html'
 		},
-		body: createReact('/prod/install', {}),
+		body: createReact('/prod/landing', {}, bundleLocation, styleLocation),
 	});
 };
 
 export const authorized = (event, context, callback) => {
 	const code = event.queryStringParameters.code;
-console.log("event", event);
 	https.get(`https://slack.com/api/oauth.access?client_id=${client.id}&client_secret=${client.secret}&code=${code}`, response => {
 		var body = '';
-		console.log('response', response)
 		response.on('data', chunk => body += chunk);
 		response.on('end', () => {
 			const jsonBody = JSON.parse(body);
@@ -47,8 +52,7 @@ console.log("event", event);
 			// remove sensitive data before sending to client
 			delete jsonBody.access_token;
 			delete jsonBody.bot;
-
-			const reactLocation = `/prod/install/${jsonBody.team_id}/info`;
+			console.log("createReact==========", createReact('/prod/landing', { status: 302 }, jsonBody, true))
 			callback(null, {
 				statusCode: 200,
 				headers: {
@@ -56,7 +60,7 @@ console.log("event", event);
 					// 'Location': `${reactLocation}`,
 					'Set-Cookie': `team_id=${jsonBody.team_id}`
 				},
-				body: createReact(reactLocation, {}),
+				body: createReact('/prod/landing', { status: 302 }, bundleLocation, styleLocation, jsonBody, true),
 			});
 		});
 	});

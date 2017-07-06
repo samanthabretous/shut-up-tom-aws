@@ -6,7 +6,8 @@
   "scripts": {
     "start": "npm run webpack & npm run gulp",
     "webpack": "node_modules/.bin/webpack",
-    "gulp": "node_modules/.bin/gulp"
+    "gulp": "node_modules/.bin/gulp",
+    "storybook": "start-storybook -p 9001 -c .storybook"
   },
   "keywords": [],
   "author": "Samantha Bretous <sam@samanthabretous.com>",
@@ -22,6 +23,7 @@
     "source-map-support": "^0.4.15"
   },
   "devDependencies": {
+    "@storybook/react": "^3.1.8",
     "babel-core": "^6.25.0",
     "babel-loader": "^7.1.1",
     "babel-plugin-transform-runtime": "^6.23.0",
