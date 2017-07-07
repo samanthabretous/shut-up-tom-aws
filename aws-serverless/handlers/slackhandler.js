@@ -7,7 +7,7 @@ import { WebClient } from '@slack/client';
 import { storeTeam, retrieveTeam } from '../src/oauth.js';
 import { renderTemplate } from '../src/templates.js';
 import Bot from '../src/bot.js';
-import App from '../../client/app/shared/App';
+import App from '../../shared/App';
 
 // slack authorization tokens
 const client = {
@@ -17,7 +17,7 @@ const client = {
 sourceMapSupport.install();
 
 const bundleLocation = 'https://s3.amazonaws.com/dev.shut-up-tom.com/bundle.js';
-const styleLocation = 'https://s3.amazonaws.com/dev.shut-up-tom.com/css/style.min.css';
+const styleLocation = 'https://s3.amazonaws.com/dev.shut-up-tom.com/style.min.css';
 
 //server side react rendering
 export const createReact = (location, context, bundle, style, team, authorized) => {

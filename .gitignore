@@ -5,3 +5,4 @@ node_modules
 .serverless
 bundle.js
 bundle.js.map
+.webpack
