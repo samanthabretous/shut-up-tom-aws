@@ -10,4 +10,4 @@ export {
   Info,
   RedirectWithStatus,
   SlackButton,
-};
+}

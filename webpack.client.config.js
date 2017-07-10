@@ -55,6 +55,7 @@ const server = {
   resolve: {
     extensions: ['.js', '.jsx']
   },
+  watchOptions: { ignored: [/node_modules/] },
   devtool: 'source-map',
   node: {
     __dirname: false,

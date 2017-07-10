@@ -2,16 +2,19 @@ import https from 'https';
 import React from 'react';
 import { renderToString } from 'react-dom/server';
 import { StaticRouter as Router, matchPath } from 'react-router-dom';
+import { createStore } from 'redux';
+import { Provider } from 'react-redux';
 import sourceMapSupport from 'source-map-support';
 import { WebClient } from '@slack/client';
 import { storeTeam, retrieveTeam } from '../src/oauth.js';
 import { renderTemplate } from '../src/templates.js';
 import Bot from '../src/bot.js';
 import App from '../../shared/App';
+import reducer from '../../redux/reducer'
 
 // slack authorization tokens
 const client = {
-	id: process.env.CLIENT_ID,
+	id: process.env.CLIENT_ID || "169193513941.181075192628",
 	secret: process.env.CLIENT_SECRET
 };
 sourceMapSupport.install();
@@ -20,13 +23,20 @@ const bundleLocation = 'https://s3.amazonaws.com/dev.shut-up-tom.com/bundle.js';
 const styleLocation = 'https://s3.amazonaws.com/dev.shut-up-tom.com/style.min.css';
 
 //server side react rendering
-export const createReact = (location, context, bundle, style, team, authorized) => {
+export const createReact = (location, context, bundle, style, dataObj) => {
+
+	const preloadedState = { clientId: client.id };
+	const store = createStore(reducer)
+
 	const mountMeImFamous = renderToString((
-		<Router context={context} location={location}>
-			<App clientId={client.id} team={team} authorized={authorized}/>
-		</Router>
+		<Provider store={store}>
+			<Router context={context} location={location}>
+				<App />
+			</Router>
+		</Provider>
 	));
-	return renderTemplate(mountMeImFamous, bundle, style)
+	const finalState = store.getState();
+	return renderTemplate(mountMeImFamous, bundle, style, Object.assign({}, finalState, dataObj))
 }
 
 export const landing = (event, context, callback) => {

@@ -5,5 +5,5 @@ import Logo from './Logo.jsx';
 export {
   Main,
   Landing,
-  Logo
-};
+  Logo,
+}

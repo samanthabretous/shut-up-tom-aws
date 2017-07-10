@@ -1,10 +1,10 @@
 import React from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
 import { Main, Landing, Logo } from "./containers";
 import { RedirectWithStatus } from "./components";
 
-export default (props) => {
-  console.log(props);
+const App = (props) => {
   return (
     <Logo>
       <Switch>
@@ -12,15 +12,21 @@ export default (props) => {
           <Main relPath={match.path} relURL={match.url} />
         )} />
       <Route path="/prod" render={() => {
+        console.log(!props.authorized)
         return !props.authorized 
           ? <Landing clientId={props.clientId} />
           : <RedirectWithStatus 
               status={302}
-              from="/prod/landing"
-              to="/prod/main/teamId/info"
+              from="/prod"
+              to="/prod/teamId/info"
             />
       }} />
       </Switch>
     </Logo>
   );
 }
+const mapStateToProps = (state) => {
+  console.log(state)
+  return state;
+}
+export default connect(mapStateToProps)(App)

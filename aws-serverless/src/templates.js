@@ -4,7 +4,7 @@ import { StaticRouter as Router } from 'react-router-dom';
 // const bundleLocation = 'https://s3.amazonaws.com/dev.shut-up-tom.com/bundle.js';
 // const styleLocation = 'https://s3.amazonaws.com/dev.shut-up-tom.com/css/style.min.css';
 
-export const renderTemplate = (mountMeImFamous, bundle, style) => `<!DOCTYPE html>
+export const renderTemplate = (mountMeImFamous, bundle, style, preloadedState) => `<!DOCTYPE html>
   <html lang="en">
     <head>
       <meta charset="UTF-8">
@@ -14,6 +14,10 @@ export const renderTemplate = (mountMeImFamous, bundle, style) => `<!DOCTYPE htm
   		<script src=${bundle} defer></script>
     </head>
     <body>
-        <div id="root">${mountMeImFamous}</div>
+      <div id="root">${mountMeImFamous}</div>
+      <script>
+        console.log('run template script')
+        window.__PRELOADED_STATE__ = ${JSON.stringify(preloadedState).replace(/</g, '\\u003c')}
+      </script>
     </body>
   </html>`;
