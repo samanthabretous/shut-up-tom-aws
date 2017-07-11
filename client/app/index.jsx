@@ -6,7 +6,6 @@ import { Provider } from 'react-redux';
 import App from '../../shared/App';
 import reducer from '../../redux/reducer'
 
-console.log("window preloadedState", window.__PRELOADED_STATE__)
 // Grab the state from a global variable injected into the server-generated HTML
 const preloadedState = window.__PRELOADED_STATE__
 

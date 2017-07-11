@@ -1,6 +1,8 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 
-export default class Info extends React.Component {
+class Info extends React.Component {
   constructor() {
     super();
     this.state = {
@@ -55,7 +57,10 @@ export default class Info extends React.Component {
   render() {
     return (
       <main className="info">
-        {!this.state.isSoundAccepted && <h2 className="welcome">Welcome. Please allow the use of your microphone to start the magic!!</h2>}
+        {!this.state.isSoundAccepted
+         ? <h2 className="welcome">Welcome. Please allow the use of your microphone to start the magic!!</h2>
+         : <h2>Magic is about to happen. Shhhhh!</h2>
+        }
         <h1>{"team_name"}</h1>
         <p className="channel">{"channel"}</p>
       </main>
@@ -63,9 +68,7 @@ export default class Info extends React.Component {
   }
 }
 
+const mapStateToProps = state => state;
 
-/*window.navigator = window.navigator || {};
-/*navigator.getUserMedia =  navigator.getUserMedia       ||
-                          navigator.webkitGetUserMedia ||
-                          navigator.mozGetUserMedia    ||
-                          null;*/
+export default withRouter(connect(mapStateToProps)(Info));
+

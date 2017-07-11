@@ -16,9 +16,9 @@
 
 body {
   height: 100vh;
-	background-image:
+/*	background-image:
     url('https://s3.amazonaws.com/dev.shut-up-tom.com/images/background-top.png'),
-    url('https://s3.amazonaws.com/dev.shut-up-tom.com/images/background-bottom.png');
+    url('https://s3.amazonaws.com/dev.shut-up-tom.com/images/background-bottom.png');*/
   background-repeat: no-repeat, no-repeat;
   background-position: top right, bottom;
   background-color: var(--dark-blue);

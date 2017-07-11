@@ -1,16 +1,10 @@
 import https from 'https';
 import React from 'react';
-import { renderToString } from 'react-dom/server';
-import { StaticRouter as Router, matchPath } from 'react-router-dom';
-import { createStore } from 'redux';
-import { Provider } from 'react-redux';
 import sourceMapSupport from 'source-map-support';
 import { WebClient } from '@slack/client';
 import { storeTeam, retrieveTeam } from '../src/oauth.js';
-import { renderTemplate } from '../src/templates.js';
 import Bot from '../src/bot.js';
-import App from '../../shared/App';
-import reducer from '../../redux/reducer'
+import { renderReact } from './reacthandler';
 
 // slack authorization tokens
 const client = {
@@ -21,33 +15,6 @@ sourceMapSupport.install();
 
 const bundleLocation = 'https://s3.amazonaws.com/dev.shut-up-tom.com/bundle.js';
 const styleLocation = 'https://s3.amazonaws.com/dev.shut-up-tom.com/style.min.css';
-
-//server side react rendering
-export const createReact = (location, context, bundle, style, dataObj) => {
-
-	const preloadedState = { clientId: client.id };
-	const store = createStore(reducer)
-
-	const mountMeImFamous = renderToString((
-		<Provider store={store}>
-			<Router context={context} location={location}>
-				<App />
-			</Router>
-		</Provider>
-	));
-	const finalState = store.getState();
-	return renderTemplate(mountMeImFamous, bundle, style, Object.assign({}, finalState, dataObj))
-}
-
-export const landing = (event, context, callback) => {
-	callback(null, {
-		statusCode: 200,
-		headers: {
-			'Content-Type': 'text/html'
-		},
-		body: createReact('/prod/landing', {}, bundleLocation, styleLocation),
-	});
-};
 
 export const authorized = (event, context, callback) => {
 	const code = event.queryStringParameters.code;
@@ -62,7 +29,7 @@ export const authorized = (event, context, callback) => {
 			// remove sensitive data before sending to client
 			delete jsonBody.access_token;
 			delete jsonBody.bot;
-			console.log("createReact==========", createReact('/prod/landing', { status: 302 }, jsonBody, true))
+
 			callback(null, {
 				statusCode: 200,
 				headers: {
@@ -70,7 +37,7 @@ export const authorized = (event, context, callback) => {
 					// 'Location': `${reactLocation}`,
 					'Set-Cookie': `team_id=${jsonBody.team_id}`
 				},
-				body: createReact('/prod/landing', { status: 302 }, bundleLocation, styleLocation, jsonBody, true),
+				body: renderReact('/prod/authorized', { status: 302 }, {authorized: true, team: jsonBody }, bundleLocation, styleLocation),
 			});
 		});
 	});

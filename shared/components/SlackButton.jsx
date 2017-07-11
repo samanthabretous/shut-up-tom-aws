@@ -1,9 +1,9 @@
 import React from "react";
 
-const SlackButton = ({ clientId }) => (
+const SlackButton = () => (
   <a
     className="landing_page-slackButton"
-    href={`https://slack.com/oauth/authorize?&client_id=${clientId}&scope=commands,bot,incoming-webhook,channels:history`}
+    href={`https://slack.com/oauth/authorize?&client_id=169193513941.181075192628&scope=commands,bot,incoming-webhook,channels:history`}
   >
     <img
       alt="Add to Slack"

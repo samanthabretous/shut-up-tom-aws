@@ -1,0 +1,5 @@
+config:
+  client:
+    baseDir: app
+    distDir: build
+    bucketName: dev.shut-up-tom-content.com

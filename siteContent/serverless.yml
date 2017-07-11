@@ -1,0 +1,15 @@
+service: shutuptom
+
+frameworkVersion: ">=1.2.0 <2.0.0"
+
+plugins:
+  - serverless-client-s3
+
+custom:
+  config: ${file(./config/${opt:stage, self:provider.stage}.yml):config}
+  client: ${self:custom.config.client}
+
+provider:
+  name: aws
+  region: us-east-1
+  runtime: nodejs6.10

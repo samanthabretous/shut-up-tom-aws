@@ -1,5 +1,6 @@
 import React from "react";
-import { NavLink, Switch, Route } from 'react-router-dom';
+import { NavLink, Switch, Route, withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
 import { CustomMessages, Dashboard, Info } from "../components";
 
 const Main = (props) => (
@@ -21,4 +22,6 @@ const Main = (props) => (
   </div>
 )
 
-export default Main;
+const mapStateToProps = (state) => (state)
+
+export default withRouter(connect(mapStateToProps)(Main));

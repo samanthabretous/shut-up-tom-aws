@@ -1,6 +1,5 @@
 const initialState = {
-  test: ['test props'],
-  clientId: process.env.SLACK_ID,
+  team: {},
 }
 
 export default function (state = initialState, action) {

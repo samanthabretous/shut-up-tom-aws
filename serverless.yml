@@ -32,7 +32,7 @@ provider:
 
 functions:
   landing:
-    handler: slackhandler.landing
+    handler: reacthandler.landing
     events:
       - http: GET /
   authorized:

@@ -1,34 +1,31 @@
 import path from 'path';
 import express from 'express';
-import https from 'https';
+import axios from 'axios';
 import React from 'react';
 import { renderToString } from 'react-dom/server';
 import { StaticRouter as Router, matchPath } from 'react-router-dom';
 import App from '../shared/App';
-import { createReact } from '../aws-serverless/handlers/slackhandler';
-const bundle = '\"bundle.js\"';
-const style = '\"style.min.css\"';
+import { renderReact } from '../aws-serverless/handlers/reacthandler';
+
+const bundle = '\"/bundle.js\"';
+const style = '\"/style.min.css\"';
 
 const app = express();
 const staticPath = path.join(__dirname, '../client/app/build');
 app.use(express.static(staticPath));
 
 app.get('/auth', (req, res) => {
-  https.get(`https://slack.com/api/oauth.access?client_id=${process.env.SLACK_ID}&client_secret=${process.env.SLACK_SECRET}&code=${req.query.code}`, response => {
-    var body = '';
+  axios.get('https://slack.com/api/oauth.access', {
+    params: {
+      client_id: process.env.SLACK_ID,
+      client_secret: process.env.SLACK_SECRET,
+      code: req.query.code
+    }
+  })
+  .then((response) => {
     console.log("response====")
-    response.on('data', chunk => body += chunk);
-    response.on('end', () => {
-      const jsonBody = JSON.parse(body);
-      console.log("jsonBody", jsonBody)
-
-      // remove sensitive data before sending to client
-      delete jsonBody.access_token;
-      delete jsonBody.bot;
-
-      const markup = createReact('/prod', { status: 302 }, bundle, style, jsonBody, false);
-      res.send(markup)
-    });
+    const markup = renderReact('/prod/auth?code', { status: 302 }, {team: {id: 'TZ54654'}, authorized: true}, bundle, style);
+    res.send(markup)
   });
 })
 
@@ -36,9 +33,7 @@ app.get('/auth', (req, res) => {
 app.get('*', (req, res) => {
   let status = 200;
   const context = {};
-  // console.log(markup)
   // context.url will contain the URL to redirect to if a <Redirect> was used
-  console.log("context",context)
   if (context.url) {
     return res.redirect(302, context.url);
   }
@@ -46,9 +41,7 @@ app.get('*', (req, res) => {
   if (context.is404) {
     status = 404;
   }
-
-    console.log("url", req.url)
-  const routes = ['/prod', '/prod/:teamId'];
+  const routes = ['/prod', '/prod/main/:teamId/info', '/prod/:authorized'];
 
   const match = routes.reduce((acc, route) => matchPath(req.url, route, { exact: true }) || acc, null);
 
@@ -56,9 +49,12 @@ app.get('*', (req, res) => {
     res.status(404).send('No Match');
     return;
   }
-  console.log("match========", match)
-
-  const markup = createReact(req.url, context, bundle, style, {authorized: false});
+  let dataObj = {}
+  if(match.path === '/prod/:authorized') {
+    dataObj = {team: {id: 'TZ54654'}, authorized: true}
+  }
+  console.log("server bundle", bundle)
+  const markup = renderReact(req.url, context,dataObj, bundle, style);
   // console.log(markup);
   res.status(status).send(markup);
 
