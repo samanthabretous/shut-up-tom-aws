@@ -33,9 +33,9 @@
 
 	```
 	endpoints:
-	  GET - https://xxxxxxxxxx.execute-api.us-east-1.amazonaws.com/dev/install
-	  GET - https://xxxxxxxxxx.execute-api.us-east-1.amazonaws.com/dev/authorized
-	  POST - https://xxxxxxxxxx.execute-api.us-east-1.amazonaws.com/dev/event
+	  GET - https://xxxxxxxxxx.execute-api.us-east-1.amazonaws.com/prod
+	  GET - https://xxxxxxxxxx.execute-api.us-east-1.amazonaws.com/prod/authorized
+	  POST - https://xxxxxxxxxx.execute-api.us-east-1.amazonaws.com/prod/event
 	```
 
 * Go to your [Slack app](https://api.slack.com/apps) settings and update them to point to your server:

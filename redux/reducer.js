@@ -1,15 +1,19 @@
 const initialState = {
-  team: {},
+  team: {
+    team_id: '',
+    team_name: '',
+    incoming_webhook: {
+      channel: '',
+      channel_id: '',
+      config_url: '',
+      url: '',
+    },
+  },
+  sound: ''
 }
 
 export default function (state = initialState, action) {
   switch (action.type) {
-    case 'TEST':
-      return {
-        ...state,
-        test: action.data
-      }
-      break;
 
     default:
       return state

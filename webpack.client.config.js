@@ -22,6 +22,7 @@ const client = {
     rules: [
       { test: [/\.jsx?$/, /\.js?$/], loaders: ["babel-loader"], exclude: /node_modules/ },
       { test: /\.(eot|svg|ttf|woff(2)?)(\?v=\d+\.\d+\.\d+)?/, loader: 'url' },
+      { test: /\.(ico|jpg|png|gif|otf|webp|woff|)(\?.*)?$/, loader: 'file-loader' },
     ]
   },
   // target: 'electron-renderer',
@@ -38,12 +39,15 @@ const server = {
   context: __dirname,
   externals: [nodeExternals()],
   module: {
-    loaders: [{
-      test: [/\.jsx?$/, /\.js?$/],
-      loaders: ['babel-loader'],
-      include: __dirname,
-      exclude: /node_modules/,
-    }],
+    loaders: [
+      {
+        test: [/\.jsx?$/, /\.js?$/],
+        loaders: ['babel-loader'],
+        include: __dirname,
+        exclude: /node_modules/,
+      },
+      { test: /\.(ico|jpg|png|gif|otf|webp|woff|)(\?.*)?$/, loader: 'file-loader' },
+    ],
   },
   // We are going to create multiple APIs, and we are
   // going to create a js file to for each, we need this output block

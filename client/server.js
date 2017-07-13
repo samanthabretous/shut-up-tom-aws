@@ -24,7 +24,7 @@ app.get('/auth', (req, res) => {
   })
   .then((response) => {
     console.log("response====")
-    const markup = renderReact('/prod/auth?code', { status: 302 }, {team: {id: 'TZ54654'}, authorized: true}, bundle, style);
+    const markup = renderReact('/prod/auth?code', { status: 302 }, {team: {id: 'T4Z5PF3TP'}, authorized: true}, bundle, style);
     res.send(markup)
   });
 })
@@ -41,7 +41,7 @@ app.get('*', (req, res) => {
   if (context.is404) {
     status = 404;
   }
-  const routes = ['/prod', '/prod/main/:teamId/info', '/prod/:authorized'];
+  const routes = ['/prod', '/prod/main/:teamId/info', '/prod/:authorized', '/prod/main/:teamId/dashboard'];
 
   const match = routes.reduce((acc, route) => matchPath(req.url, route, { exact: true }) || acc, null);
 
@@ -50,12 +50,23 @@ app.get('*', (req, res) => {
     return;
   }
   let dataObj = {}
-  if(match.path === '/prod/:authorized') {
-    dataObj = {team: {id: 'TZ54654'}, authorized: true}
+  if(match.path !== '/prod') {
+    dataObj = {
+      authorized : true,
+      team: {
+        incoming_webhook: {
+          channel: "#general",
+          channel_id : "C4Z30G44S",
+          configuration_url: process.env.CONFIG_URL,
+          url: process.env.SLACK_URL,
+        },
+        team_id: "T4Z5PF3TP",
+        team_name: "samanthabretous",
+      }
+    };
   }
-  console.log("server bundle", bundle)
   const markup = renderReact(req.url, context,dataObj, bundle, style);
-  // console.log(markup);
+  console.log(markup);
   res.status(status).send(markup);
 
 

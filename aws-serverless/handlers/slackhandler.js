@@ -37,7 +37,7 @@ export const authorized = (event, context, callback) => {
 					// 'Location': `${reactLocation}`,
 					'Set-Cookie': `team_id=${jsonBody.team_id}`
 				},
-				body: renderReact('/prod/authorized', { status: 302 }, {authorized: true, team: jsonBody }, bundleLocation, styleLocation),
+				body: renderReact('/prod/authorized', { status: 302 }, { authorized: true, team: jsonBody }),
 			});
 		});
 	});

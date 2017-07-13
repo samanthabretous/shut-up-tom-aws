@@ -1,8 +1,8 @@
 import { configure } from '@storybook/react';
 
 function loadStories() {
-  require('../shared/stories/app.js');
-  require('../shared/stories/landing.js');
+  require('../stories/app.js');
+  require('../stories/landing.js');
   // You can require as many stories as you need.
 }
 
